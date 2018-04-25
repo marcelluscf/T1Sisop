@@ -22,6 +22,8 @@ int stopExec = 0;
 
 FILA2 aptos;
 FILA2 bloqueados;
+FILA2 aptossusp;
+FILA2 bloqueadossusp;
 FILA2 cjoinQueue;
 
 TCB_t *exec;
@@ -221,7 +223,7 @@ void fimThread(){
 	//~ if(setPrio() != 1)
 		//~ printf("Nao conseguiu setar a prioridade em fimThread!\n");
 
-	//~ printf("thread encerrando = %d\n", exec->tid);
+	printf("thread encerrando = %d\n", exec->tid);
 		
 	lookForTidinBlockedQueue(); //procura na fila de bloqueados alguma thread que esteja esperando pela que acabou
 
@@ -299,6 +301,16 @@ int ccreate (void *(*start) (void*), void *arg, int zero){
 			printf("Nao criou a fila de bloqueados\n");
 			return -1;
 		}	
+		
+		if(CreateFila2(&aptossusp) != 0){
+			printf("Nao criou a fila de aptos-suspensos\n");
+			return -1;
+		}
+		
+		if(CreateFila2(&bloqueadossusp) != 0){
+			printf("Nao criou a fila de bloqueados-suspensos\n");
+			return -1;
+		}
 		
 		firstExec = 0;	//variavel que indica que nao eh mais a primeira execucao
 	}
@@ -465,7 +477,7 @@ int csignal(csem_t *sem){
 
 int cidentify(char *name, int size){
 
-	name = "Gustavo Francisco\t00273173\nMarcellus\n";
+	name = "Gustavo Francisco\t00273173\nMarcellus\t00281984\n";
 
 	if(sizeof(name) < size)
 

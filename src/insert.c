@@ -15,7 +15,7 @@ int	Insert(PFILA2 pfila, TCB_t *tcb) {
 	// pfile vazia?
 	if (FirstFila2(pfila)==0) {
 		LastFila2(pfila);
-		return InsertBeforeIteratorFila2(pfila, tcb);
+		return InsertAfterIteratorFila2(pfila, tcb);
 	}	
 	return AppendFila2(pfila, (void *)tcb);
 }
