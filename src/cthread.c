@@ -51,6 +51,31 @@ ucontext_t endThread, dispatch_ctx;
 
 //seta iterador para a primeira posicao da fila de aptos para indicar a thread a receber a CPU 
 
+
+
+/******************************************************************************
+Parâmetros:
+	tid:	identificador da thread a ser suspensa.
+Retorno:
+	Se correto => 0 (zero)
+	Se erro	   => Valor negativo.
+******************************************************************************/
+int csuspend(int tid){
+	return 0;
+
+}
+
+/******************************************************************************
+Parâmetros:
+	tid:	identificador da thread que terá sua execução retomada.
+Retorno:
+	Se correto => 0 (zero)
+	Se erro	   => Valor negativo.
+******************************************************************************/
+int cresume(int tid){
+	return 0;
+}
+
 TCB_t *setNewExec(){
 
 	if (FirstFila2(&aptos) == 0){
@@ -123,8 +148,7 @@ void changeState(PFILA2 queue, TCB_t *threadGoingToQueue){
 	//insere na fila indicada por queue
 
 	if (exec != NULL)
-		
-		if(InsertByPrio(queue, threadGoingToQueue) != 0)
+		if(Insert(queue, threadGoingToQueue) != 0)
 			printf("Nao conseguiu inserir em fila na changeState()\n");
 			
 	
@@ -220,7 +244,7 @@ void initMain(){
 	//~ threadMain->startTimer = 1; 
 	
 	getcontext(&threadMain->context);
-	//~ exec = threadMain;
+	exec = threadMain;
 
 	//COMECA A CONTAR O TEMPO DE EXECUCAO DA MAIN PARA SETAR SUA PRIORIDADE	
 	//~ if(setPrio() != 1)
@@ -302,7 +326,7 @@ int ccreate (void *(*start) (void*), void *arg, int zero){
 	
 	//Inserindo na Fila de Aptos;
 
-	if (InsertByPrio(&aptos, novaThread) == 0)
+	if (Insert(&aptos, novaThread) == 0)
 		printf("Nova Thread inserida na fila de Aptos\n");
 	else{
 		printf("Erro na insercao na fila de Aptos\n");
@@ -334,7 +358,7 @@ int cjoin(int tid){
 		flagVerify = flagVerify && checkJoin(tid);
 		
 		if(flagVerify == 0){
-
+			exec->state= PROCST_BLOQ;
 			changeState(&bloqueados, exec);
 			swapcontext(&exec->context, &dispatch_ctx);
 
